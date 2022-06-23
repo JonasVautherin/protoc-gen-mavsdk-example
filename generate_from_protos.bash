@@ -16,15 +16,4 @@ command -v protoc-gen-mavsdk > /dev/null || {
     exit 1
 }
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OUTPUT_DIR=${OUTPUT_DIR:-"${SCRIPT_DIR}/Generated"}
-
-if [ ! -d ${OUTPUT_DIR} ]; then
-    echo "Script is not in the right location! It is made to generate the files in '${OUTPUT_DIR}', which doesn't exist!"
-
-    exit 1
-fi
-
-export TEMPLATE_PATH=${TEMPLATE_PATH:-"${SCRIPT_DIR}"}
-
-protoc my_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. --custom_out=${OUTPUT_DIR} --custom_opt=file_ext=swift
+protoc my_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. --custom_out=. --custom_opt=output_file=example.md --custom_opt=template_file=example.md.j2 --custom_opt=lstrip_blocks=True --custom_opt=trim_blocks=True

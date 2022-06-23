@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package meetup.example.api;
+
+// Example API for C++ meetup
+service MyApi {
+  // Send a 'ping' and receive a 'pong'
+  rpc Ping(PingRequest) returns(PingResponse) {}
+  // Send a value to be echoed back
+  rpc Echo(EchoRequest) returns(EchoResponse) {}
+  // Add two numbers and return the result
+  rpc Add(AddRequest) returns(AddResponse) {}
+  // Subscribe to 'mode' updates.
+  rpc SubscribeMode(SubscribeModeRequest) returns(stream ModeResponse) {}
+}
+
+message PingRequest {}
+message PingResponse {}
+
+message EchoRequest {
+  string send_value = 1; // The value being sent
+}
+message EchoResponse {
+  string echo_value = 1; // The value being echoed
+}
+
+message AddRequest {
+  TwoIntegers two_integers = 1; // Integers to be added together
+}
+message AddResponse {
+  int32 result = 1; // Sum of the two integers
+}
+
+message SubscribeModeRequest {}
+message ModeResponse {
+  Mode mode = 1; // The current mode
+}
+
+// Mode
+enum Mode {
+  MODE_UNKNOWN = 0; // Mode unknown
+  MODE_IDLE = 1; // Mode 'idle'
+  MODE_ACTIVE = 2; // Mode 'active'
+}
+
+// Struct containing integers to add
+message TwoIntegers {
+  int32 first = 1; // First integer
+  int32 second = 2; // Second integer
+}

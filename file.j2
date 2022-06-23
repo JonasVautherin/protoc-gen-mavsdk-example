@@ -1,0 +1,74 @@
+# Summary of values exposed by protoc-gen-mavsdk
+
+## Overview
+
+Names can be accessed as lowerCamelCase, UpperCamelCase, lower_snake_case, Upper_Snake_Case, UPPERCASE, lowercase, like so:
+
+* lower camel case: {{ plugin_name.lower_camel_case }}
+* upper camel case: {{ plugin_name.upper_camel_case }}
+* lower snake case: {{ plugin_name.lower_snake_case }}
+* upper snake case: {{ plugin_name.upper_snake_case }}
+* uppercase: {{ plugin_name.uppercase }}
+
+It can also be combined with jinja2 features, for instance:
+
+* lowercase: {{ plugin_name.upper_camel_case.lower() }}
+
+## Top level
+
+Each proto file is generated separately. For instance, a proto file can represent a class.
+
+The following is accessible from the top level (i.e. in `file.j2`):
+
+* plugin_name = {{ plugin_name.upper_camel_case }}
+* package = {{ package.lower_snake_case }}
+* class_description = {{ class_description }}
+* enumerations (see below)
+* structures (see below)
+* methods (see below)
+
+## Enumerations
+{% for enum in enums %}
+### {{ enum.name.upper_camel_case }}
+
+* values: {
+{% for value in enum.values %}
+  {{ value.name.uppercase }}{% if not loop.last %},{{ "\n" }}{% else %}{{ "\n" }}{% endif %}
+{% endfor %}
+}
+{% endfor %}
+
+## Structures
+{% for struct in structs %}
+### {{ struct.name.upper_camel_case }}
+* fields: {
+  {% for field in struct.fields %}
+  {{ field.name.lower_snake_case }}{% if not loop.last %},{{ "\n" }}{% else %}{{ "\n" }}{% endif %}
+  {% endfor %}
+}
+{% endfor %}
+
+## Methods
+There are 3 kinds of methods:
+
+* _Call_ is a method that does not return anything (e.g. void)
+* _Request_ is a method that does return something (e.g. a string, an integer, a struct)
+* _Stream_ is a method that will return something multiple times (typically it can be implemented by a callback).
+
+{% for method in methods %}
+### {{ method.name.lower_camel_case }} ({% if method.is_call %}Call{% elif method.is_request %}Request{% elif method.is_stream %}Stream{% endif %})
+{% if method.params %}
+* params: {
+  {% for param in method.params %}
+  {{ param.name.lower_snake_case }}:{{ param.description }}{% if not loop.last %},{{ "\n" }}{% endif %}
+  {% endfor %}
+}
+{% else %}
+* params: <none>
+{% endif %}
+{% if method.is_request %}
+* returns _{{ method.return_name.upper_camel_case }}_:{{ method.return_description }}
+{%- endif %}
+* method description: {{ method.method_description }}
+
+{% endfor %}

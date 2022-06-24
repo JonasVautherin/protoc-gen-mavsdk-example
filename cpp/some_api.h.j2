@@ -1,0 +1,14 @@
+#include <string>
+
+class {{ plugin_name.upper_camel_case }} {
+public:
+{% for method in methods %}
+    //{{ method.method_description }}
+    {% if method.is_call %}
+    void {{ method.name.lower_snake_case }}();
+    {% elif method.is_request %}
+    {% endif %}
+{% endif %}
+    void poke();
+    std::string echo(std::string send_value);
+};

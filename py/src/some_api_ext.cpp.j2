@@ -1,5 +1,6 @@
 #include <example_library/{{ plugin_name.lower_snake_case }}.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
 
 namespace py = pybind11;
 
@@ -10,12 +11,15 @@ PYBIND11_MODULE(example_library_py, m) {
     {{ plugin_name.lower_snake_case }}
         .def(py::init<>())
         {% for method in methods %}
-            {% if not method.is_stream %}
-        .def("{{ method.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{{ method.name.lower_snake_case }}, "{{ method.method_description }}"){% if loop.last %};{% endif %}{{ "\n" }}
-            {%- endif %}
-        {%- endfor -%}
+        .def("{{ method.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{% if method.is_stream %}subscribe_{% endif %}{{ method.name.lower_snake_case }}, "{{ method.method_description }}"){% if loop.last %};{% endif %}{{ "\n" }}
+        {%- endfor %}
 
     {% for enum in enums %}
+    py::enum_<{{ plugin_name.upper_camel_case }}::{{ enum.name.upper_camel_case }}> {{ enum.name.lower_snake_case }}({{ plugin_name.lower_snake_case }}, "{{ enum.name.upper_camel_case }}");
+    {{ enum.name.lower_snake_case }}
+        {% for value in enum.values %}
+        .value("{{ value.name.upper_camel_case }}", {{ plugin_name.upper_camel_case }}::{{ enum.name.upper_camel_case }}::{{ value.name.upper_camel_case }}){% if loop.last %};{% endif %}{{ "\n" }}
+        {%- endfor %}
     {% endfor %}
 
     {% for struct in structs %}

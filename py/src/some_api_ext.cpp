@@ -13,6 +13,7 @@ PYBIND11_MODULE(example_library_py, m) {
         .def("poke", &SomeApi::poke, "Call a function (that may have side effects)")
         .def("echo", &SomeApi::echo, "Send a value to be echoed back")
         .def("add", &SomeApi::add, "Add two numbers and return the result")
+        .def("multiply", &SomeApi::multiply, "Multiply two numbers and return the result")
         .def("mode", &SomeApi::subscribe_mode, "Subscribe to 'mode' updates.");
 
     py::enum_<SomeApi::Mode> mode(some_api, "Mode");

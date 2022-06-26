@@ -10,6 +10,8 @@ service SomeApi {
   rpc Echo(EchoRequest) returns(EchoResponse) {}
   // Add two numbers and return the result
   rpc Add(AddRequest) returns(AddResponse) {}
+  // Multiply two numbers and return the result
+  rpc Multiply(MultiplyRequest) returns(MultiplyResponse) {}
   // Subscribe to 'mode' updates.
   rpc SubscribeMode(SubscribeModeRequest) returns(stream ModeResponse) {}
 }
@@ -29,6 +31,14 @@ message AddRequest {
 }
 message AddResponse {
   int32 result = 1; // Sum of the two integers
+}
+
+message MultiplyRequest {
+  int32 first = 1; // First integer
+  int32 second = 2; // Second integer
+}
+message MultiplyResponse {
+  int32 result = 1; // Product of the two integers
 }
 
 message SubscribeModeRequest {}

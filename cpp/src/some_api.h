@@ -24,6 +24,9 @@ public:
     // Add two numbers and return the result
     int32_t add(TwoIntegers two_integers);
 
+    // Multiply two numbers and return the result
+    int32_t multiply(int32_t first, int32_t second);
+
     // Subscribe to 'mode' updates.
     void subscribe_mode(const std::function<void(Mode mode)>& mode_callback);
 };

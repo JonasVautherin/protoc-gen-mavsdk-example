@@ -22,6 +22,12 @@ TEST(Add, AddsIntegersCorrectly) {
     ASSERT_EQ(7, sum);
 }
 
+TEST(Multiply, MultiplysIntegersCorrectly) {
+    SomeApi some_api;
+    auto product = some_api.multiply(6, 3);
+    ASSERT_EQ(18, product);
+}
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

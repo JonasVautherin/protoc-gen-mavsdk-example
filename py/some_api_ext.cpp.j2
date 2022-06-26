@@ -1,0 +1,30 @@
+#include <example_library/{{ plugin_name.lower_snake_case }}.h>
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
+PYBIND11_MODULE(example_library_py, m) {
+    m.doc() = "Module corresponding to class {{ plugin_name.upper_camel_case }}";
+
+    py::class_<{{ plugin_name.upper_camel_case }}> {{ plugin_name.lower_snake_case }}(m, "{{ plugin_name.upper_camel_case }}", "{{ class_description }}");
+    {{ plugin_name.lower_snake_case }}
+        .def(py::init<>())
+        {% for method in methods %}
+            {% if not method.is_stream %}
+        .def("{{ method.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{{ method.name.lower_snake_case }}, "{{ method.method_description }}"){% if loop.last %};{% endif %}{{ "\n" }}
+            {%- endif %}
+        {%- endfor -%}
+
+    {% for enum in enums %}
+    {% endfor %}
+
+    {% for struct in structs %}
+    py::class_<{{ plugin_name.upper_camel_case }}::{{ struct.name.upper_camel_case }}> {{ struct.name.lower_snake_case }}({{ plugin_name.lower_snake_case }}, "{{ struct.name.upper_camel_case }}");
+    {{ struct.name.lower_snake_case }}
+        .def(py::init<>())
+        {% for field in struct.fields %}
+        .def_readwrite("{{ field.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{{ struct.name.upper_camel_case }}::{{ field.name.lower_snake_case }}, "{{ field.description[1:field.description.rfind('\n')] }}"){% if loop.last %};{% endif %}{{ "\n" }}
+        {%- endfor -%}
+    {% endfor %}
+}
+

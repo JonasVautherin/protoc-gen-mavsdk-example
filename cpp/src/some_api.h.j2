@@ -1,13 +1,22 @@
+#include <functional>
 #include <string>
 
 class {{ plugin_name.upper_camel_case }} {
 public:
+{% for enum in enums %}
+    enum class {{ enum.name.upper_camel_case }} {
+        {% for value in enum.values %}
+        {{ value.name.upper_camel_case }}, // {{ value.description.strip() }}
+        {% endfor %}
+    };
+{% endfor %}
+
 {% for struct in structs %}
     // {{ struct.struct_description }}
     struct {{ struct.name.upper_camel_case }} {
         {% for field in struct.fields %}
-        {{ field.type_info.name }} {{ field.name.lower_snake_case }}{}; //{{ field.description }}
-        {%- endfor %}
+        {{ field.type_info.name }} {{ field.name.lower_snake_case }}{}; // {{ field.description.strip() }}
+        {% endfor %}
     };
 {% endfor %}
 
@@ -17,6 +26,8 @@ public:
     void {{ method.name.lower_snake_case }}({% for param in method.params %}{{ param.type_info.name }} {{ param.name.lower_snake_case }}{% if not loop.last %}, {% endif %}{% endfor %});
     {% elif method.is_request %}
     {{ method.return_type.name }} {{ method.name.lower_snake_case }}({% for param in method.params %}{{ param.type_info.name }} {{ param.name.lower_snake_case }}{% if not loop.last %}, {% endif %}{% endfor %});
+    {% elif method.is_stream %}
+    void subscribe_{{ method.name.lower_snake_case }}({% for param in method.params %}{{ param.type_info.name }} {{ param.name.lower_snake_case }}, {% endfor %}const std::function<void({{ method.return_type.name }} {{ method.return_name.lower_snake_case }})>& {{ method.name.lower_snake_case }}_callback);
     {% endif %}
     {% if not loop.last %}{{ "\n" }}{% endif %}
 {% endfor %}

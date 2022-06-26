@@ -1,7 +1,14 @@
+#include <functional>
 #include <string>
 
 class SomeApi {
 public:
+    enum class Mode {
+        Unknown, // Mode unknown
+        Idle, // Mode 'idle'
+        Active, // Mode 'active'
+    };
+
     // Struct containing integers to add
     struct TwoIntegers {
         int32_t first{}; // First integer
@@ -18,4 +25,5 @@ public:
     int32_t add(TwoIntegers two_integers);
 
     // Subscribe to 'mode' updates.
+    void subscribe_mode(const std::function<void(Mode mode)>& mode_callback);
 };

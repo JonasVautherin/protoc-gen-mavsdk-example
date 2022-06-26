@@ -1,0 +1,6 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(Threads)
+
+get_filename_component(EXAMPLE_LIBRARY_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include("${EXAMPLE_LIBRARY_CMAKE_DIR}/ExampleLibraryTargets.cmake")

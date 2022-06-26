@@ -18,8 +18,10 @@ int32_t SomeApi::add(SomeApi::TwoIntegers two_integers) {
 
 void SomeApi::subscribe_mode(const std::function<void(Mode mode)>& mode_callback) {
     std::thread([mode_callback]() {
-        mode_callback(SomeApi::Mode::Active);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        for (size_t i = 0; i < 5; i++) {
+            mode_callback(SomeApi::Mode::Active);
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
     }).detach();
 }
 

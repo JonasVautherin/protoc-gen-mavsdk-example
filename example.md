@@ -4,15 +4,15 @@
 
 Names can be accessed as lowerCamelCase, UpperCamelCase, lower_snake_case, Upper_Snake_Case, UPPERCASE, lowercase, like so:
 
-* lower camel case: myApi
-* upper camel case: MyApi
-* lower snake case: my_api
-* upper snake case: My_Api
-* uppercase: MY_API
+* lower camel case: someApi
+* upper camel case: SomeApi
+* lower snake case: some_api
+* upper snake case: Some_Api
+* uppercase: SOME_API
 
 It can also be combined with jinja2 features, for instance:
 
-* lowercase: myapi
+* lowercase: someapi
 
 ## Top level
 
@@ -20,7 +20,7 @@ Each proto file is generated separately. For instance, a proto file can represen
 
 The following is accessible from the top level template (e.g. `file.j2`):
 
-* plugin_name = MyApi
+* plugin_name = SomeApi
 * package = meetup.example.api
 * class_description = Example API for C++ meetup
 * enumerations (see below)
@@ -50,9 +50,9 @@ There are 3 kinds of methods:
 * _Request_ is a method that does return something (e.g. a string, an integer, a struct)
 * _Stream_ is a method that will return something multiple times (typically it can be implemented by a callback).
 
-### ping (Call)
+### poke (Call)
 * params: <none>
-* method description: Send a 'ping' and receive a 'pong'
+* method description: Call a function (that may have side effects)
 
 ### echo (Request)
 * params: {

@@ -3,9 +3,9 @@ syntax = "proto3";
 package meetup.example.api;
 
 // Example API for C++ meetup
-service MyApi {
-  // Send a 'ping' and receive a 'pong'
-  rpc Ping(PingRequest) returns(PingResponse) {}
+service SomeApi {
+  // Call a function (that may have side effects)
+  rpc Poke(PokeRequest) returns(PokeResponse) {}
   // Send a value to be echoed back
   rpc Echo(EchoRequest) returns(EchoResponse) {}
   // Add two numbers and return the result
@@ -14,8 +14,8 @@ service MyApi {
   rpc SubscribeMode(SubscribeModeRequest) returns(stream ModeResponse) {}
 }
 
-message PingRequest {}
-message PingResponse {}
+message PokeRequest {}
+message PokeResponse {}
 
 message EchoRequest {
   string send_value = 1; // The value being sent

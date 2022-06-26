@@ -2,13 +2,23 @@
 
 class {{ plugin_name.upper_camel_case }} {
 public:
+{% for struct in structs %}
+    // {{ struct.struct_description }}
+    struct {{ struct.name.upper_camel_case }} {
+        {% for field in struct.fields %}
+        {{ field.type_info.name }} {{ field.name.lower_snake_case }}{}; //{{ field.description }}
+        {%- endfor %}
+    };
+{% endfor %}
+
 {% for method in methods %}
-    //{{ method.method_description }}
+    // {{ method.method_description }}
     {% if method.is_call %}
-    void {{ method.name.lower_snake_case }}();
+    void {{ method.name.lower_snake_case }}({% for param in method.params %}{{ param.type_info.name }} {{ param.name.lower_snake_case }}{% if not loop.last %}, {% endif %}{% endfor %});
     {% elif method.is_request %}
+    {{ method.return_type.name }} {{ method.name.lower_snake_case }}({% for param in method.params %}{{ param.type_info.name }} {{ param.name.lower_snake_case }}{% if not loop.last %}, {% endif %}{% endfor %});
     {% endif %}
-{% endif %}
-    void poke();
-    std::string echo(std::string send_value);
+    {% if not loop.last %}{{ "\n" }}{% endif %}
+{% endfor %}
 };
+

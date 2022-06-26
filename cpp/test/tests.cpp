@@ -13,6 +13,15 @@ TEST(Echo, EchoesTheSentValue) {
     ASSERT_EQ("blah", echo_value);
 }
 
+TEST(Add, AddsIntegersCorrectly) {
+    SomeApi some_api;
+    SomeApi::TwoIntegers two_integers{3, 4};
+
+    auto sum = some_api.add(two_integers);
+
+    ASSERT_EQ(7, sum);
+}
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

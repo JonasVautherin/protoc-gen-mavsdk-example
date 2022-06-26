@@ -20,4 +20,4 @@ protoc some_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. 
 
 protoc some_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. --custom_out=. --custom_opt=output_file=cpp/src/some_api.h --custom_opt=template_file=cpp/src/some_api.h.j2 --custom_opt=lstrip_blocks=True --custom_opt=trim_blocks=True
 
-protoc some_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. --custom_out=. --custom_opt=output_file=py/some_api_ext.cpp --custom_opt=template_file=py/some_api_ext.cpp.j2 --custom_opt=lstrip_blocks=True --custom_opt=trim_blocks=True
+protoc some_api.proto --plugin=protoc-gen-custom=$(which protoc-gen-mavsdk) -I. --custom_out=. --custom_opt=output_file=py/src/some_api_ext.cpp --custom_opt=template_file=py/src/some_api_ext.cpp.j2 --custom_opt=lstrip_blocks=True --custom_opt=trim_blocks=True

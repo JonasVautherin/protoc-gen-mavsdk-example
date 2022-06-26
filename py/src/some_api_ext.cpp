@@ -11,7 +11,7 @@ PYBIND11_MODULE(example_library_py, m) {
         .def(py::init<>())
         .def("poke", &SomeApi::poke, "Call a function (that may have side effects)")
         .def("echo", &SomeApi::echo, "Send a value to be echoed back")
-        .def("add", &SomeApi::add, "Add two numbers and return the result");
+        .def("add", &SomeApi::add, "Add two numbers and return the result")
 
     py::class_<SomeApi::TwoIntegers> two_integers(some_api, "TwoIntegers");
     two_integers

@@ -10,7 +10,7 @@ find_package(ExampleLibrary REQUIRED)
 find_package(pybind11 REQUIRED)
 
 pybind11_add_module(example_library_py
-    some_api_ext.cpp
+    src/some_api_ext.cpp
     )
 
 target_link_libraries(example_library_py

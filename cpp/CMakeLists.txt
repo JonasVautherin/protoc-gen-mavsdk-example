@@ -11,7 +11,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 add_library(example_library
-    some_api.cpp
+    src/some_api.cpp
     )
 
 target_link_libraries(example_library
@@ -19,7 +19,7 @@ target_link_libraries(example_library
     Threads::Threads
     )
 
-set_target_properties(example_library PROPERTIES PUBLIC_HEADER some_api.h)
+set_target_properties(example_library PROPERTIES PUBLIC_HEADER src/some_api.h)
 
 include(GNUInstallDirs)
 

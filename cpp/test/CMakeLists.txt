@@ -7,7 +7,7 @@ add_executable(tests
 target_include_directories(tests
     PUBLIC
     ${GTEST_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/src
     )
 
 target_link_libraries(tests

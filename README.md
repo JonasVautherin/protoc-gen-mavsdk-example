@@ -6,12 +6,12 @@ Because protoc-gen-mavsdk was built for [MAVSDK](https://github.com/mavlink/mavs
 
 ## Generating the code (for all subprojects)
 
-The script [generate_from_protos.bash](generate_from_protos.bash) generates all the code for this repository from the `some_api.proto` definition. It has two dependencies listed in [requirements.txt](requirements.txt):
+The script [generate_from_protos.bash](generate_from_protos.bash) generates all the code for this repository from the `some_api.proto` definition. It has two dependencies:
 
+* protoc: this is the actual protobuf compiler, for which protoc-gen-mavsdk is a plugin
 * protoc-gen-mavsdk: the protoc plugin around which this repository is built
-* grpcio-tools: a convenient way to get the `protoc` executable in the PATH. You may be fine with `protoc` installed on your system, though.
 
-The dependencies can be installed with `pip install --user -r requirements.txt`.
+While `protoc` can usually be installed with the distro package manager (e.g. `apt install protobuf-compiler`), `protoc-gen-mavsdk` can be installed with `pip install --user -r requirements.txt` or `pip install --user protoc-gen-mavsdk`.
 
 Once the dependencies have been installed, generate the code by running the script:
 

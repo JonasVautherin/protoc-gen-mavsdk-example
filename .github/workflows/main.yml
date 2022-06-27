@@ -11,6 +11,20 @@ on:
     - '*'
 
 jobs:
+  generate:
+    name: code generation
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install packages
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y protobuf-compiler
+      - name: install python tools
+        run: pip install -r requirements.txt
+      - name: generate code
+        run: ./generate_from_protos.bash
+
   cpp:
     name: cpp
     runs-on: ubuntu-22.04

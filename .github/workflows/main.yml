@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+    - 'main'
+    tags:
+    - '*'
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  cpp:
+    name: cpp
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: install packages
+        run: sudo apt-get update && sudo apt-get install -y libgtest-dev
+      - name: configure
+        run: cmake -DCMAKE_INSTALL_PREFIX=cpp/build/install -Bcpp/build -Scpp
+      - name: build
+        run: cmake --build cpp/build --target install
+      - name: test
+        run: ./cpp/build/test/tests
+
+  py:
+    name: py
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: configure dependencies
+        run: cmake -DCMAKE_INSTALL_PREFIX=py/dependencies/build/install -Bpy/dependencies/build -Spy/dependencies
+      - name: build and install dependencies
+        run: cmake --build py/dependencies/build
+      - name: configure
+        run: cmake -DCMAKE_PREFIX_PATH=$(pwd)/py/dependencies/build/install -Bpy/build -Spy
+      - name: build
+        run: cmake --build py/build
+

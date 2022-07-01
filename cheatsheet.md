@@ -68,6 +68,15 @@ There are 3 kinds of methods:
 * returns _Result_: Sum of the two integers
 * method description: Add two numbers and return the result
 
+### multiply (Request)
+* params: {
+  first: First integer
+,
+  second: Second integer
+}
+* returns _Result_: Product of the two integers
+* method description: Multiply two numbers and return the result
+
 ### mode (Stream)
 * params: <none>
 * method description: Subscribe to 'mode' updates.

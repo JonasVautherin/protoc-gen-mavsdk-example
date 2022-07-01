@@ -25,3 +25,7 @@ void SomeApi::subscribe_mode(const std::function<void(Mode mode)>& mode_callback
     }).detach();
 }
 
+int32_t SomeApi::multiply(int32_t first, int32_t second) {
+    return first * second;
+}
+

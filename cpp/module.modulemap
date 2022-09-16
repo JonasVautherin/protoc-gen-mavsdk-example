@@ -1,0 +1,6 @@
+framework module example_library {
+  umbrella header "some_api.h"
+
+  export *
+  module * { export * }
+}

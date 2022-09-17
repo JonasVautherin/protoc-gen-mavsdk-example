@@ -11,7 +11,7 @@ The script [generate_from_protos.bash](generate_from_protos.bash) generates all 
 * protoc: this is the actual protobuf compiler, for which protoc-gen-mavsdk is a plugin
 * protoc-gen-mavsdk: the protoc plugin around which this repository is built
 
-While `protoc` can usually be installed with the distro package manager (e.g. `apt install protobuf-compiler`), `protoc-gen-mavsdk` can be installed with `pip install --user -r requirements.txt` or `pip install --user protoc-gen-mavsdk`.
+While `protoc` can usually be installed with the system package manager (e.g. `apt install protobuf-compiler`), `protoc-gen-mavsdk` can be installed with `pip install --user -r requirements.txt` or `pip install --user protoc-gen-mavsdk`.
 
 Once the dependencies have been installed, generate the code by running the script:
 
@@ -21,11 +21,12 @@ $ ./generate_from_protos.bash
 
 ## Subprojects
 
-This repo is generating code for three "subprojects":
+This repo is generating code for the following "subprojects":
 
 * [cpp](cpp): a very simple c++ library that exposes a few functions.
-* [py](py): python bindings on top of the c++ library using pybind11
-* [cheatsheet.md](cheatsheet.md): an even simpler example of a mardown file generated from a jinja [template](cheatsheet.md.j2) and the `some_api.proto` definition.
+* [py](py): python bindings on top of the c++ library using pybind11.
+* [swift](swift): swift bindings on top of obj-c++ bindings on top of c++ xcframework.
+* [cheatsheet.md](cheatsheet.md): an even simpler example of a markdown file generated from a jinja [template](cheatsheet.md.j2) and the `some_api.proto` definition.
 
 ## Building the cpp subproject
 

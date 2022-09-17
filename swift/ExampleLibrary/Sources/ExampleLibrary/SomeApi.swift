@@ -1,15 +1,18 @@
 import ExampleLibraryObjC
 
 public class SomeApi {
-    let someApiWrapper = SomeApiWrapper()
+    let someApiObjC = SomeApiObjC()
 
     public enum Mode {
+        /// Mode unknown
         case Unknown
+        /// Mode 'idle'
         case Idle
+        /// Mode 'active'
         case Active
     }
 
-    internal func objCModeToMode(mode: ModeObjC) -> Mode {
+    internal func modeObjCToMode(_ mode: ModeObjC) -> Mode {
         switch (mode) {
         case ModeObjC.unknown:
             return Mode.Unknown
@@ -22,38 +25,56 @@ public class SomeApi {
         }
     }
 
+    /// Struct containing integers to add
     public struct TwoIntegers {
         public init(first: Int32, second: Int32) {
             self.first = first
             self.second = second
         }
 
+        /// First integer
         var first: Int32
+        /// Second integer
         var second: Int32
+    }
+
+    internal func twoIntegersToTwoIntegersObjC(_ twoIntegers: TwoIntegers) -> TwoIntegersObjC {
+        return TwoIntegersObjC(first: twoIntegers.first, second: twoIntegers.second)
     }
 
     public init() {}
 
+    /// Call a function (that may have side effects)
     public func poke() {
-        someApiWrapper.poke()
+        return someApiObjC.poke()
     }
 
+    /// Send a value to be echoed back
     public func echo(sendValue: String) -> String {
-        return someApiWrapper.echo(sendValue)
+        let sendValueObjC = sendValue
+
+        return someApiObjC.echo(sendValueObjC)
     }
 
+    /// Add two numbers and return the result
     public func add(twoIntegers: TwoIntegers) -> Int32 {
-        let two_integers = TwoIntegersObjC(first: twoIntegers.first, second: twoIntegers.second)
-        return someApiWrapper.add(two_integers)
+        let twoIntegersObjC = twoIntegersToTwoIntegersObjC(twoIntegers)
+
+        return someApiObjC.add(twoIntegersObjC)
     }
 
+    /// Multiply two numbers and return the result
     public func multiply(first: Int32, second: Int32) -> Int32 {
-        return someApiWrapper.multiply(first, secondNumber: second)
+        let firstObjC = first
+        let secondObjC = second
+
+        return someApiObjC.multiply(firstObjC, secondObjC)
     }
 
+    /// Subscribe to 'mode' updates.
     public func subscribeMode(callback: @escaping (Mode) -> ()) {
-        someApiWrapper.subscribe_mode { mode in
-            callback(self.objCModeToMode(mode: mode))
+        someApiObjC.subscribe_mode { event in
+            callback(self.modeObjCToMode(event))
         }
     }
 }

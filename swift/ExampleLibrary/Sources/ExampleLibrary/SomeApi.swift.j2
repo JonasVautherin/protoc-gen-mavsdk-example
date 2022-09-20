@@ -9,18 +9,18 @@ public class {{ plugin_name.upper_camel_case }} {
     public enum {{ enum_type }} {
         {% for value in enum.values %}
         /// {{ value.description.strip() }}
-        case {{ value.name.upper_camel_case }}
+        case {{ value.name.lower_camel_case }}
         {% endfor %}
     }
 
-    internal func {{ enum_name }}ObjCTo{{ enum_type }}(_ {{ enum_name }}: {{ enum_type }}ObjC) -> {{ enum_type }} {
+    func {{ enum_name }}ObjCTo{{ enum_type }}(_ {{ enum_name }}: {{ enum_type }}ObjC) -> {{ enum_type }} {
         switch ({{ enum_name }}) {
         {% for value in enum.values %}
-        case {{ enum_type }}ObjC.{{ value.name.lower_camel_case }}:
-            return {{ enum_type }}.{{ value.name.upper_camel_case }}
+        case .{{ value.name.lower_camel_case }}:
+            return .{{ value.name.lower_camel_case }}
         {% endfor %}
         @unknown default:
-            return {{ enum_type }}.{{ enum.values[0].name.upper_camel_case }}
+            return .{{ enum.values[0].name.lower_camel_case }}
         }
     }
     {% endfor %}
@@ -38,11 +38,11 @@ public class {{ plugin_name.upper_camel_case }} {
 
         {% for field in struct.fields %}
         /// {{ field.description.strip() }}
-        var {{ field.name.lower_camel_case }}: {{ field.type_info.name }}
+        let {{ field.name.lower_camel_case }}: {{ field.type_info.name }}
         {% endfor %}
     }
 
-    internal func {{ struct_name }}To{{ struct_type }}ObjC(_ {{ struct_name }}: {{ struct_type }}) -> {{ struct_type }}ObjC {
+    func {{ struct_name }}To{{ struct_type }}ObjC(_ {{ struct_name }}: {{ struct_type }}) -> {{ struct_type }}ObjC {
         return {{ struct_type }}ObjC({% for field in struct.fields %}{{ field.name.lower_camel_case }}: {{ struct_name }}.{{ field.name.lower_camel_case }}{% if not loop.last %}, {% endif %}{% endfor %})
     }
     {% endfor %}
@@ -79,8 +79,12 @@ public class {{ plugin_name.upper_camel_case }} {
         {% if not method.is_stream %}
         return {{ plugin_name.lower_camel_case }}ObjC.{{ method.name.lower_camel_case }}({{ params }})
         {% else %}
-        {{ plugin_name.lower_camel_case }}ObjC.subscribe_{{ method.name.lower_camel_case }}{% if params %}({{ params }}){% endif %} { event in
-            callback(self.{{ method.return_name.lower_camel_case }}ObjCTo{{ method.return_name.upper_camel_case }}(event))
+        {{ plugin_name.lower_camel_case }}ObjC.subscribe{{ method.name.upper_camel_case }}{% if params %}({{ params }}){% endif %} { [weak self] event in
+            guard let strongSelf = self else {
+                return
+            }
+
+            callback(strongSelf.{{ method.return_name.lower_camel_case }}ObjCTo{{ method.return_name.upper_camel_case }}(event))
         }
         {% endif %}
     }

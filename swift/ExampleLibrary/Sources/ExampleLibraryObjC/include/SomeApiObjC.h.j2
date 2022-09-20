@@ -1,0 +1,32 @@
+#import <Foundation/Foundation.h>
+
+{% for struct in structs %}
+typedef struct {
+    {% for field in struct.fields %}
+    {{ field.type_info.name }} {{ field.name.lower_camel_case }};
+    {% endfor %}
+} {{ struct.name.upper_camel_case }}ObjC;
+{% endfor %}
+
+{% for enum in enums %}
+typedef NS_ENUM(uint16_t, {{ enum.name.upper_camel_case }}ObjC) {
+    {% for value in enum.values %}
+    {{ enum.name.upper_camel_case }}ObjC{{ value.name.upper_camel_case }}{% if not loop.last %},{{ "\n" }}{% endif %}
+    {% endfor %}
+{{ "\n" }}};
+{% endfor %}
+
+@interface {{ plugin_name.upper_camel_case }}ObjC : NSObject
+
+{% for method in methods %}
+{% if method.is_call %}
+- (void) {{ method.name.lower_camel_case }};
+{% elif method.is_request %}
+- ({% if method.return_type.name.endswith("*") %}nonnull {% endif %}{{ method.return_type.name }}) {{ method.name.lower_camel_case }}:{% for param in method.params %}{% if not loop.first %} :{% endif %}({{ param.type_info.name }}{% if not param.type_info.is_primitive %}ObjC{% endif %}{% if param.type_info.name.endswith("*") %} _Nonnull{% endif %}){{ param.name.lower_camel_case }}{% endfor %};
+{% elif method.is_stream %}
+- (void) subscribe{{ method.name.upper_camel_case }}:(void(^_Nonnull)({{ method.return_type.name }}ObjC))callback;
+{% endif %}
+{% endfor %}
+
+@end
+

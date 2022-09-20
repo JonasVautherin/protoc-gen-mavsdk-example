@@ -1,0 +1,11 @@
+{
+    "double": "double",
+    "float": "float",
+    "int64_t": "int64_t",
+    "uint64_t": "uint64_t",
+    "int32_t": "int32_t",
+    "uint32_t": "uint32_t",
+    "bool": "boolean_t",
+    "std::string": "NSString *",
+    "repeated": { "prefix": "[", "suffix": "]" }
+}

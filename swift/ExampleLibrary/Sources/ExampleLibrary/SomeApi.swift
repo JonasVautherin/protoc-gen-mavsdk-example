@@ -5,23 +5,23 @@ public class SomeApi {
 
     public enum Mode {
         /// Mode unknown
-        case Unknown
+        case unknown
         /// Mode 'idle'
-        case Idle
+        case idle
         /// Mode 'active'
-        case Active
+        case active
     }
 
-    internal func modeObjCToMode(_ mode: ModeObjC) -> Mode {
+    func modeObjCToMode(_ mode: ModeObjC) -> Mode {
         switch (mode) {
-        case ModeObjC.unknown:
-            return Mode.Unknown
-        case ModeObjC.idle:
-            return Mode.Idle
-        case ModeObjC.active:
-            return Mode.Active
+        case .unknown:
+            return .unknown
+        case .idle:
+            return .idle
+        case .active:
+            return .active
         @unknown default:
-            return Mode.Unknown
+            return .unknown
         }
     }
 
@@ -33,12 +33,12 @@ public class SomeApi {
         }
 
         /// First integer
-        var first: Int32
+        let first: Int32
         /// Second integer
-        var second: Int32
+        let second: Int32
     }
 
-    internal func twoIntegersToTwoIntegersObjC(_ twoIntegers: TwoIntegers) -> TwoIntegersObjC {
+    func twoIntegersToTwoIntegersObjC(_ twoIntegers: TwoIntegers) -> TwoIntegersObjC {
         return TwoIntegersObjC(first: twoIntegers.first, second: twoIntegers.second)
     }
 
@@ -73,8 +73,12 @@ public class SomeApi {
 
     /// Subscribe to 'mode' updates.
     public func subscribeMode(callback: @escaping (Mode) -> ()) {
-        someApiObjC.subscribe_mode { event in
-            callback(self.modeObjCToMode(event))
+        someApiObjC.subscribeMode { [weak self] event in
+            guard let strongSelf = self else {
+                return
+            }
+
+            callback(strongSelf.modeObjCToMode(event))
         }
     }
 }

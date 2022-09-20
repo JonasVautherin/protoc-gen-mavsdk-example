@@ -11,12 +11,12 @@ typedef NS_ENUM(uint16_t, ModeObjC) {
     ModeObjCActive
 };
 
-@interface SomeApiWrapper : NSObject
+@interface SomeApiObjC : NSObject
 
 - (void) poke;
-- (nonnull NSString *) echo:(NSString * _Nonnull)send_value;
+- (nonnull NSString *) echo:(NSString * _Nonnull)sendValue;
 - (int32_t) add:(TwoIntegersObjC)twoIntegers;
-- (int32_t) multiply:(int32_t)first secondNumber:(int32_t)second;
-- (void) subscribe_mode:(void(^)(ModeObjC))callback;
+- (int32_t) multiply:(int32_t)first :(int32_t)second;
+- (void) subscribeMode:(void(^_Nonnull)(ModeObjC))callback;
 
 @end

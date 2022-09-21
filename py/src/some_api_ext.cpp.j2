@@ -1,3 +1,4 @@
+{% set class_name = plugin_name.upper_camel_case %}
 #include <example_library/{{ plugin_name.lower_snake_case }}.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -5,29 +6,38 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(example_library_py, m) {
-    m.doc() = "Module corresponding to class {{ plugin_name.upper_camel_case }}";
+    m.doc() = "Module corresponding to class {{ class_name }}";
 
-    py::class_<{{ plugin_name.upper_camel_case }}> {{ plugin_name.lower_snake_case }}(m, "{{ plugin_name.upper_camel_case }}", "{{ class_description }}");
+    py::class_<{{ class_name }}> {{ plugin_name.lower_snake_case }}(m, "{{ class_name }}", "{{ class_description }}");
     {{ plugin_name.lower_snake_case }}
         .def(py::init<>())
         {% for method in methods %}
-        .def("{{ method.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{% if method.is_stream %}subscribe_{% endif %}{{ method.name.lower_snake_case }}, "{{ method.method_description }}"){% if loop.last %};{% endif %}{{ "\n" }}
+        {% set method_name = method.name.lower_snake_case %}
+        {% set method_docs = method.method_description %}
+        .def("{{ method_name }}", &{{ class_name }}::{% if method.is_stream %}subscribe_{% endif %}{{ method_name }}, "{{ method_docs }}"){% if loop.last %};{% endif %}{{ "\n" }}
         {%- endfor %}
 
     {% for enum in enums %}
-    py::enum_<{{ plugin_name.upper_camel_case }}::{{ enum.name.upper_camel_case }}> {{ enum.name.lower_snake_case }}({{ plugin_name.lower_snake_case }}, "{{ enum.name.upper_camel_case }}");
-    {{ enum.name.lower_snake_case }}
+    {% set enum_type = enum.name.upper_camel_case %}
+    {% set enum_name = enum.name.lower_snake_case %}
+    py::enum_<{{ class_name }}::{{ enum_type }}> {{ enum_name }}({{ plugin_name.lower_snake_case }}, "{{ enum_type }}");
+    {{ enum_name }}
         {% for value in enum.values %}
-        .value("{{ value.name.upper_camel_case }}", {{ plugin_name.upper_camel_case }}::{{ enum.name.upper_camel_case }}::{{ value.name.upper_camel_case }}){% if loop.last %};{% endif %}{{ "\n" }}
+        {% set value_type = value.name.upper_camel_case %}
+        .value("{{ value_type }}", {{ class_name }}::{{ enum_type }}::{{ value_type }}){% if loop.last %};{% endif %}{{ "\n" }}
         {%- endfor %}
     {% endfor %}
 
     {% for struct in structs %}
-    py::class_<{{ plugin_name.upper_camel_case }}::{{ struct.name.upper_camel_case }}> {{ struct.name.lower_snake_case }}({{ plugin_name.lower_snake_case }}, "{{ struct.name.upper_camel_case }}");
-    {{ struct.name.lower_snake_case }}
+    {% set struct_type = struct.name.upper_camel_case %}
+    {% set struct_name = struct.name.lower_snake_case %}
+    py::class_<{{ class_name }}::{{ struct_type }}> {{ struct_name }}({{ plugin_name.lower_snake_case }}, "{{ struct_type }}");
+    {{ struct_name }}
         .def(py::init<>())
         {% for field in struct.fields %}
-        .def_readwrite("{{ field.name.lower_snake_case }}", &{{ plugin_name.upper_camel_case }}::{{ struct.name.upper_camel_case }}::{{ field.name.lower_snake_case }}, "{{ field.description[1:field.description.rfind('\n')] }}"){% if loop.last %};{% endif %}{{ "\n" }}
+        {% set field_name = field.name.lower_snake_case %}
+        {% set field_docs = field.description %}
+        .def_readwrite("{{ field_name }}", &{{ class_name }}::{{ struct_type }}::{{ field_name }}, "{{ field_docs[1:field_docs.rfind('\n')] }}"){% if loop.last %};{% endif %}{{ "\n" }}
         {%- endfor -%}
     {% endfor %}
 }

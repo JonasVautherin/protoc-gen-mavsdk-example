@@ -1,0 +1,82 @@
+#include <example_library/{{ plugin_name.lower_snake_case }}.h>
+
+#import "{{ plugin_name.upper_camel_case }}ObjC.h"
+
+@implementation {{ plugin_name.upper_camel_case }}ObjC {
+    {{ plugin_name.upper_camel_case }} {{ plugin_name.lower_camel_case }};
+}
+
+- (NSString *) strCppToObjC:(std::string&)cpp_string {
+    return [NSString
+            stringWithCString:cpp_string.c_str()
+            encoding:NSUTF8StringEncoding];
+}
+
+{% for enum in enums %}
+{% set prefix = plugin_name.upper_camel_case %}
+{% set enum_type = enum.name.upper_camel_case %}
+{% set enum_name = enum.name.lower_camel_case %}
+- ({{ enum_type }}ObjC) {{ enum_name }}CppToObjC:({{ prefix }}::{{ enum_type }}){{ enum_name }} {
+    switch ({{ enum_name }}) {
+        {% for value in enum.values %}
+        case {{ prefix }}::{{ enum_type }}::{{ value.name.upper_camel_case }}:
+            return {{ enum_type }}ObjC{{ value.name.upper_camel_case }};
+        {% endfor %}
+    }
+}
+{% endfor %}
+
+{% for struct in structs %}
+{% set prefix = plugin_name.upper_camel_case %}
+{% set struct_type = struct.name.upper_camel_case %}
+{% set struct_name = struct.name.lower_camel_case %}
+{% set struct_cpp_name = struct.name.lower_snake_case %}
+- ({{ prefix }}::{{ struct_type }}) {{ struct_name }}ObjCToCpp:({{ struct_type }}ObjC){{ struct_name }} {
+    {{ prefix }}::{{ struct_type }} {{ struct_cpp_name }};
+    {% for field in struct.fields %}
+    {{ struct_cpp_name }}.{{ field.name.lower_snake_case }} = {{ struct_name }}.{{ field.name.lower_camel_case }};
+    {% endfor %}
+    return {{ struct_cpp_name }};
+}
+{% endfor %}
+
+{% for method in methods %}
+{% set args %}
+{% for param in method.params %}:({{ param.type_info.name }}{% if not param.type_info.is_primitive %}ObjC{% endif %}){{ param.name.lower_camel_case }}{% if not loop.last %} {% endif %}{% endfor %}
+{% endset %}
+{% set params %}
+{% for param in method.params %}{% if "NSString" in param.type_info.name %}std::string([{{ param.name.lower_camel_case }} UTF8String]){% elif param.type_info.is_primitive %}{{ param.name.lower_camel_case }}{% else %}[self {{ param.name.lower_camel_case }}ObjCToCpp:{{ param.name.lower_camel_case }}]{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}
+{% endset %}
+{% set callback %}
+{% if method.is_stream %}:(void(^)({{ method.return_type.name }}ObjC))callback{% endif %}
+{% endset %}
+{% if not method.is_call %}{% set return_name = method.return_name.lower_camel_case %}{% endif %}
+- ({% if method.is_request %}{{ method.return_type.name }}{% else %}void{% endif %}) {% if method.is_stream %}subscribe{{ method.name.upper_camel_case }}{% else %}{{ method.name.lower_camel_case }}{% endif %}{{ args }}{{ callback }} {
+    {% if method.is_call %}
+    {{ plugin_name.lower_camel_case }}.{{ method.name.lower_snake_case }}({{ params }});
+    {% elif method.is_request %}
+    auto result = {{ plugin_name.lower_camel_case }}.{{ method.name.lower_camel_case }}({{ params }});
+    {% if "NSString" in method.return_type.name %}
+    return [self strCppToObjC:result];
+    {% elif method.return_type.is_primitive %}
+    return result;
+    {% else %}
+    return [self {{ return_name }}CppToObjC:result];
+    {% endif %}
+    {% elif method.is_stream %}
+    {{ plugin_name.lower_camel_case }}.subscribe_{{ method.name.lower_snake_case }}({% if method.params %}{{ params }}, {% endif %}[self, callback]({{ plugin_name.upper_camel_case }}::{{ method.return_type.name }} {{ method.return_name.lower_snake_case }}) {
+        {% if "NSString" in method.return_type.name %}
+        callback([self strCppToObjC:{{ return_name }}]);
+        {% elif method.return_type.is_primitive %}
+        callback({{ return_name }});
+        {% else %}
+        callback([self {{ return_name }}CppToObjC:{{ return_name }}]);
+        {% endif %}
+    });
+    {% endif %}
+}
+{% if not loop.last %}{{ "\n" }}{% endif %}
+{% endfor %}
+
+@end
+

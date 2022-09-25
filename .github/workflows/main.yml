@@ -24,6 +24,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: generate code
         run: ./generate_from_protos.bash
+      - name: check for diff
+        run: git diff --exit-code
 
   cpp:
     name: cpp
@@ -62,10 +64,10 @@ jobs:
         run: cmake -DCMAKE_INSTALL_PREFIX=swift/build/macos/install -Bswift/build/macos -Sswift/dependencies
       - name: build and install dependencies
         run: cmake --build swift/build/macos
-      - name: Assemble xcframework
+      - name: assemble xcframework
         run: BUILD_DIR=$(pwd)/swift/build bash $(pwd)/cpp/tools/assemble_xcframework.sh
-      - name: Build Swift library
+      - name: build Swift library
         run: swift build --package-path swift/ExampleLibrary
-      - name: Run Swift tests
+      - name: run Swift tests
         run: swift test --package-path swift/ExampleLibrary
 

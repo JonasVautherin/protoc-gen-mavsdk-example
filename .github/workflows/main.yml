@@ -53,3 +53,19 @@ jobs:
       - name: build
         run: cmake --build py/build
 
+  swift:
+    name: swift
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v2
+      - name: configure dependencies
+        run: cmake -DCMAKE_INSTALL_PREFIX=swift/build/macos/install -Bswift/build/macos -Sswift/dependencies
+      - name: build and install dependencies
+        run: cmake --build swift/build/macos
+      - name: Assemble xcframework
+        run: BUILD_DIR=$(pwd)/swift/build bash $(pwd)/cpp/tools/assemble_xcframework.sh
+      - name: Build Swift library
+        run: swift build --package-path swift/ExampleLibrary
+      - name: Run Swift tests
+        run: swift test --package-path swift/ExampleLibrary
+

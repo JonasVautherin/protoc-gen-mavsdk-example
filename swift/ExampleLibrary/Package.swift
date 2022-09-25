@@ -22,6 +22,9 @@ let package = Package(
             name: "example_library",
             path: "../build/example_library.xcframework"
         ),
+        .testTarget(
+            name: "ExampleLibraryTests",
+            dependencies: ["ExampleLibrary"]),
     ],
     cxxLanguageStandard: .cxx17
 )

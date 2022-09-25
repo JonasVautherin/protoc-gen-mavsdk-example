@@ -20,7 +20,7 @@ let package = Package(
         ),
         .binaryTarget(
             name: "example_library",
-            path: "../../cpp/build/example_library.xcframework"
+            path: "../build/example_library.xcframework"
         ),
     ],
     cxxLanguageStandard: .cxx17

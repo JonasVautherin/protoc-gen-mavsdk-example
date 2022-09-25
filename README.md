@@ -1,3 +1,5 @@
+[![Build](https://github.com/JonasVautherin/protoc-gen-mavsdk-example/actions/workflows/main.yml/badge.svg)](https://github.com/JonasVautherin/protoc-gen-mavsdk-example/actions/workflows/main.yml)
+
 # Example using protoc-gen-mavsdk
 
 This repository tries to illustrate the use of protoc-gen-mavsdk. The

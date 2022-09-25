@@ -3,7 +3,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BUILD_DIR=${SCRIPT_DIR}/../build
+BUILD_DIR=${BUILD_DIR:-"${SCRIPT_DIR}/../build"}
 IOS_FRAMEWORK_DIR=${BUILD_DIR}/ios/install/lib
 IOS_SIM_FRAMEWORK_DIR=${BUILD_DIR}/ios_simulator/install/lib
 MACOS_FRAMEWORK_DIR=${BUILD_DIR}/macos/install/lib
